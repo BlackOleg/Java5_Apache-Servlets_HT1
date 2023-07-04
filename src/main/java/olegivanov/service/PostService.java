@@ -36,7 +36,7 @@ public class PostService {
   }
 
   public void removeById(long id) {
-    repository.removeById(id);
+        if (id>0) repository.removeById(id);
   }
 }
 

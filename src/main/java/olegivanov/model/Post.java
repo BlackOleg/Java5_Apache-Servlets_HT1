@@ -27,7 +27,7 @@ public class Post {
   public void setContent(String content) {
     this.content = content;
   }
-  public String toString(){
-    return id + " : " + content;
-  }
+//  public String toString(){
+//    return id + " : " + content;
+//  }
 }

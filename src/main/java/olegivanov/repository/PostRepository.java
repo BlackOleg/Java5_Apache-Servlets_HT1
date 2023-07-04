@@ -8,53 +8,43 @@ import olegivanov.model.Post;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 // Stub
 public class PostRepository {
 
-    private static ConcurrentHashMap<Long, String> repositoryMap = new ConcurrentHashMap<>();
-    private Type itemsMapType = new TypeToken<Map<Long, String>>() {
+    private final static ConcurrentHashMap<Long, String> repositoryMap = new ConcurrentHashMap<>();
+    private final Type itemsMapType = new TypeToken<Map<Long, String>>() {
     }.getType();
 
     public List<Post> all() {
-        var map =
-                repositoryMap.entrySet().stream().collect(Collectors.toMap(
-                        entry -> entry.getKey(),
-                        entry -> entry.getValue())
-                );
+        List<Post> list = repositoryMap.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .map(e -> new Post(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
 
-        return (List<Post>) map; //Collections.emptyList();
+        return list;
     }
 
     public Optional<Post> getById(long id) {
-        var map =
-                repositoryMap.entrySet().stream()
-                        .filter(x -> x.getKey() == id)
-                        .collect(Collectors.toMap(
-                                entry -> entry.getKey(),
-                                entry -> entry.getValue())
-                        );
-
-        return Optional.empty();
+        Optional<Post> post = repositoryMap.entrySet().stream()
+                .filter(x -> x.getKey().equals(id))
+                .map(e -> new Post(e.getKey(), e.getValue()))
+                .findFirst();
+        return post;//Optional.ofNullable(list.orElse(null));
     }
 
     public Post save(Post post) {
         repositoryMap.put(post.getId(), post.getContent());
-
-        //todo
         return post;
     }
 
     public void removeById(long id) {
+        repositoryMap.remove(id);
     }
 
     static Object parseHashMapToObject(HashMap map, Class cls) {
         //GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        ;
         String jsonString = gson.toJson(map);
         return gson.fromJson(jsonString, cls);
     }
