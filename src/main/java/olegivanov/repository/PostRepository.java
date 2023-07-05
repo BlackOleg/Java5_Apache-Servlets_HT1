@@ -18,8 +18,7 @@ public class PostRepository {
 
 
     public List<Post> all() {
-        List<Post> list = repositoryMap.values().stream()
-                .collect(Collectors.toList());
+        List<Post> list = new ArrayList<>(repositoryMap.values());
         return list;
     }
 
@@ -27,10 +26,10 @@ public class PostRepository {
         return Optional.ofNullable(Optional.ofNullable(repositoryMap.get(id)).orElse(null));
     }
 
-     public synchronized Post save(Post post) {
-        Long newId=atomicLong.addAndGet(1);
+    public synchronized Post save(Post post) {
+        Long newId = atomicLong.addAndGet(1);
 
-         if (post.getId() > 0) {
+        if (post.getId() > 0) {
             repositoryMap.put(post.getId(), post);
         } else {
             post.setId(newId);
@@ -41,12 +40,5 @@ public class PostRepository {
 
     public synchronized void removeById(long id) {
         repositoryMap.remove(id);
-    }
-
-    static Object parseHashMapToObject(HashMap map, Class cls) {
-        //GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonString = gson.toJson(map);
-        return gson.fromJson(jsonString, cls);
     }
 }
