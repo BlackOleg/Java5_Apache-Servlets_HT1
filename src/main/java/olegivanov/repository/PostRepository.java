@@ -8,37 +8,38 @@ import olegivanov.model.Post;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 // Stub
 public class PostRepository {
+    private static AtomicLong atomicLong = new AtomicLong(0);
+    private final static ConcurrentHashMap<Long, Post> repositoryMap = new ConcurrentHashMap<>();
 
-    private final static ConcurrentHashMap<Long, String> repositoryMap = new ConcurrentHashMap<>();
-    private final Type itemsMapType = new TypeToken<Map<Long, String>>() {
-    }.getType();
 
     public List<Post> all() {
-        List<Post> list = repositoryMap.entrySet().stream().sorted(Map.Entry.comparingByKey())
-                .map(e -> new Post(e.getKey(), e.getValue()))
+        List<Post> list = repositoryMap.values().stream()
                 .collect(Collectors.toList());
-
         return list;
     }
 
     public Optional<Post> getById(long id) {
-        Optional<Post> post = repositoryMap.entrySet().stream()
-                .filter(x -> x.getKey().equals(id))
-                .map(e -> new Post(e.getKey(), e.getValue()))
-                .findFirst();
-        return post;//Optional.ofNullable(list.orElse(null));
+        return Optional.ofNullable(Optional.ofNullable(repositoryMap.get(id)).orElse(null));
     }
 
-    public Post save(Post post) {
-        repositoryMap.put(post.getId(), post.getContent());
+     public synchronized Post save(Post post) {
+        Long newId=atomicLong.addAndGet(1);
+
+         if (post.getId() > 0) {
+            repositoryMap.put(post.getId(), post);
+        } else {
+            post.setId(newId);
+            repositoryMap.put(newId, post);
+        }
         return post;
     }
 
-    public void removeById(long id) {
+    public synchronized void removeById(long id) {
         repositoryMap.remove(id);
     }
 
