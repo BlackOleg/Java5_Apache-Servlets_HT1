@@ -26,7 +26,7 @@ public class PostRepository {
         return Optional.ofNullable(Optional.ofNullable(repositoryMap.get(id)).orElse(null));
     }
 
-    public synchronized Post save(Post post) {
+    public Post save(Post post) {
         Long newId = atomicLong.addAndGet(1);
 
         if (post.getId() > 0) {
@@ -38,7 +38,7 @@ public class PostRepository {
         return post;
     }
 
-    public synchronized void removeById(long id) {
+    public void removeById(long id) {
         repositoryMap.remove(id);
     }
 }
