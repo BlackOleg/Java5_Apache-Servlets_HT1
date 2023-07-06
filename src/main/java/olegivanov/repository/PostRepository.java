@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import olegivanov.model.Post;
+import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-// Stub
+@Repository
 public class PostRepository {
     private static AtomicLong atomicLong = new AtomicLong(0);
     private final static ConcurrentHashMap<Long, Post> repositoryMap = new ConcurrentHashMap<>();

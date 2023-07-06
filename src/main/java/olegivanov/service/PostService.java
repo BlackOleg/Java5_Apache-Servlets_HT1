@@ -3,11 +3,12 @@ package olegivanov.service;
 import olegivanov.exception.NotFoundException;
 import olegivanov.model.Post;
 import olegivanov.repository.PostRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-
+@Service
 public class PostService {
   private final PostRepository repository;
 

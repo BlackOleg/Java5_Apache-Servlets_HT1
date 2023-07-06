@@ -3,11 +3,12 @@ package olegivanov.controller;
 import com.google.gson.Gson;
 import olegivanov.model.Post;
 import olegivanov.service.PostService;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
-
+@Controller
 public class PostController {
   public static final String APPLICATION_JSON = "application/json";
   private final PostService service;
@@ -24,7 +25,7 @@ public class PostController {
   }
 
   public void getById(long id, HttpServletResponse response) throws IOException {
-    // TODO: deserialize request & serialize response
+
     response.setContentType(APPLICATION_JSON);
     final var data = service.getById(id);
     final var gson = new Gson();
@@ -40,7 +41,7 @@ public class PostController {
   }
 
   public void removeById(long id, HttpServletResponse response) throws IOException {
-        // TODO: deserialize request & serialize response
+
     response.setContentType(APPLICATION_JSON);
     final var data = service.getById(id);
     final var gson = new Gson();
