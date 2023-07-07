@@ -1,5 +1,6 @@
 package olegivanov.servlet;
 
+import olegivanov.config.JavaConfig;
 import olegivanov.controller.PostController;
 import olegivanov.repository.PostRepository;
 import olegivanov.repository.PostRepositoryStubImpl;
@@ -23,8 +24,8 @@ public class MainServlet extends HttpServlet {
 //        final var repository = new PostRepositoryStubImpl();
 //        final var service = new PostService(repository);
 //        controller = new PostController(service);
-        try (var context = new AnnotationConfigApplicationContext("olegivanov")) {
-
+//        try (var context = new AnnotationConfigApplicationContext("olegivanov")) {
+          try (var context = new AnnotationConfigApplicationContext(JavaConfig.class)) {
             // получаем по имени бина
             final var controller = context.getBean("postController");
 
