@@ -2,7 +2,9 @@ package olegivanov.servlet;
 
 import olegivanov.controller.PostController;
 import olegivanov.repository.PostRepository;
+import olegivanov.repository.PostRepositoryStubImpl;
 import olegivanov.service.PostService;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +20,21 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() {
-        final var repository = new PostRepository();
-        final var service = new PostService(repository);
-        controller = new PostController(service);
+//        final var repository = new PostRepositoryStubImpl();
+//        final var service = new PostService(repository);
+//        controller = new PostController(service);
+        try (var context = new AnnotationConfigApplicationContext("olegivanov")) {
+
+            // получаем по имени бина
+            final var controller = context.getBean("postController");
+
+            // получаем по классу бина
+            final var service = context.getBean(PostService.class);
+
+            // по умолчанию создаётся лишь один объект на BeanDefinition
+            final var isSame = service == context.getBean("postService");
+            final var repository = context.getBean("postRepositoryStubImpl");
+        }
     }
 
     @Override
